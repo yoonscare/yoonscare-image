@@ -52,12 +52,12 @@ if st.button("✨ 이미지 생성하기"):
                 response = requests.get(image_url)
                 img = Image.open(BytesIO(response.content))
 
-                # 이미지 크기 조정 (최대 너비 600px)
+                # 이미지 크기 조정 (최대 너비 400px, 비율 유지)
                 max_width = 400
                 img.thumbnail((max_width, max_width))
 
-                # 이미지 표시
-                st.image(img, caption="🖼️ 생성된 이미지", use_container_width=True)
+                # 이미지 표시 (use_container_width=False로 크기 고정)
+                st.image(img, caption="🖼️ 생성된 이미지", width=max_width)
 
                 # 다운로드 버튼 추가
                 img_bytes = BytesIO()
