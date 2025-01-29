@@ -53,7 +53,7 @@ if st.button("✨ 이미지 생성하기"):
                 img = Image.open(BytesIO(response.content))
 
                 # 이미지 크기 조정 (최대 너비 600px)
-                max_width = 600
+                max_width = 400
                 img.thumbnail((max_width, max_width))
 
                 # 이미지 표시
