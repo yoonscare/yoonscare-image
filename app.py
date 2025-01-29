@@ -4,7 +4,7 @@ from PIL import Image
 import requests
 from io import BytesIO
 
-# Streamlit UI 구성
+# Streamlit UI 설정
 st.set_page_config(page_title="AI 이미지 생성기", page_icon="🎨", layout="wide")
 
 # 사이드바 설정
@@ -19,7 +19,7 @@ safety_tolerance = st.sidebar.slider("안전 허용치", 0, 5, 2)
 
 # 메인 UI
 st.title("🎨 AI 이미지 생성기")
-st.markdown("Replicate AI 모델을 사용하여 원하는 이미지 생성")
+st.markdown("Replicate AI 모델을 사용하여 원하는 이미지를 생성하세요.")
 
 # 프롬프트 입력
 prompt = st.text_area(
@@ -47,13 +47,29 @@ if st.button("✨ 이미지 생성하기"):
                     }
                 )
 
-                # 출력된 이미지 URL 가져오기
+                # 출력된 이미지 가져오기
                 image_url = str(output)
                 response = requests.get(image_url)
                 img = Image.open(BytesIO(response.content))
 
-                # 결과 표시
-                st.image(img, caption="🖼️ 생성된 이미지", use_column_width=True)
+                # 이미지 크기 조정 (최대 너비 600px)
+                max_width = 600
+                img.thumbnail((max_width, max_width))
+
+                # 이미지 표시
+                st.image(img, caption="🖼️ 생성된 이미지", use_container_width=True)
+
+                # 다운로드 버튼 추가
+                img_bytes = BytesIO()
+                img.save(img_bytes, format=output_format.upper())
+                img_bytes = img_bytes.getvalue()
+
+                st.download_button(
+                    label="📥 이미지 다운로드",
+                    data=img_bytes,
+                    file_name=f"generated_image.{output_format}",
+                    mime=f"image/{output_format}"
+                )
 
             except Exception as e:
                 st.error(f"⚠️ 에러 발생: {e}")
